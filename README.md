@@ -1,6 +1,6 @@
 # DBConnect
 
-### Why use this package?
+### Why use this module?
 - Make it easy to discover new databases at DataCamp
 - Allow us to rotate DB credentials, without anyone having to update their scripts
 - Make it easy to open the documentation of a database
