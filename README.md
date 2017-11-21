@@ -17,7 +17,7 @@ aws configure
 > Default region name: us-east-1
 > Default output format: <leave blank>
 
-pip install git+ssh://git@github.com/datacamp/dbconnect-python
+pip install git+https://github.com/datacamp/dbconnect-python
 ```
 
 ## How to use
