@@ -19,6 +19,7 @@ aws configure
 
 pip install git+https://github.com/datacamp/dbconnect-python
 ```
+Given that this package connects to databases, you will most likely need to install the MySQL and/or PostgreSQL clients for your OS.
 
 ## How to use
 **For security reasons, we only allow DB connections from our VPN. Make sure to be connected when using this module.**
