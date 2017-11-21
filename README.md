@@ -53,5 +53,21 @@ dbc.get_docs(database="main-app")
 Opening "https://github.com/datacamp/main-app/wiki/Database-Documentation"
 ```
 
-## Example
-Make sure to look at the `example.ipynb` on how this module can be used.
+## AWS Parameter Store Structure
+| Parameter | Value |
+| --------- | ----- |
+| /dbconnect/dbnames | List of `<application-name>`s, separated with comma. |
+
+For every application:
+
+| Parameter | Value |
+| --------- | ----- |
+| `/dbconnect/<application-name>/type` | Type of database (mysql, postgresql) |
+| `/dbconnect/<application-name>/endpoint` | Endpoint of the replica |
+| `/dbconnect/<application-name>/port` | Port of the replica |
+| `/dbconnect/<application-name>/user` | Username of the connection |
+| `/dbconnect/<application-name>/database` | Name of the database |
+| `/dbconnect/<application-name>/docs` | URL of the database documentation |
+| `/dbconnect/<application-name>/password` | Password of the database. **Make sure the `type` is set to `SecureString`** |
+
+These paramters are managed by terraform. (Ask the IDE team)
