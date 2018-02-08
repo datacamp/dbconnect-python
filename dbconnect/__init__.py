@@ -2,6 +2,7 @@
 import webbrowser
 import boto3
 from sqlalchemy import create_engine
+from urllib.parse import quote_plus
 
 SSM = boto3.client('ssm')
 
@@ -17,13 +18,14 @@ def create_connection(**kwargs):
 
     prefix = _get_db_prefix(database)
     if "awsathena" in prefix:
-        connection_string = "{prefix}://{user}:{password}@{endpoint}:{port}/?s3_staging_dir={s3_staging_dir}".format(
+        connection_string = "{prefix}://{user}:{password}@{endpoint}:{port}/{database}?s3_staging_dir={s3_staging_dir}".format(
             prefix=prefix,
-            user=_get_param("/dbconnect/{database}/user".format(database=database)),
-            password=_get_param("/dbconnect/{database}/password".format(database=database)),
-            endpoint=_get_param("/dbconnect/{database}/endpoint".format(database=database)),
-            port=_get_param("/dbconnect/{database}/port".format(database=database)),
-            s3_staging_dir=_get_param("/dbconnect/{database}/s3-staging".format(database=database)))
+            user=quote_plus(_get_param("/dbconnect/{database}/user".format(database=database))),
+            password=quote_plus(_get_param("/dbconnect/{database}/password".format(database=database))),
+            endpoint=quote_plus(_get_param("/dbconnect/{database}/endpoint".format(database=database))),
+            port=quote_plus(_get_param("/dbconnect/{database}/port".format(database=database))),
+            database=quote_plus("main-app"),
+            s3_staging_dir=quote_plus(_get_param("/dbconnect/{database}/s3-staging".format(database=database))))
     else:
         connection_string = "{prefix}://{user}:{password}@{endpoint}:{port}/{database}".format(
             prefix=_get_db_prefix(database),
@@ -32,6 +34,8 @@ def create_connection(**kwargs):
             endpoint=_get_param("/dbconnect/{database}/endpoint".format(database=database)),
             port=_get_param("/dbconnect/{database}/port".format(database=database)),
             database=_get_param("/dbconnect/{database}/database".format(database=database)))
+
+    print(connection_string)
 
     return create_engine(connection_string)
 
