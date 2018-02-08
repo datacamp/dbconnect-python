@@ -28,7 +28,7 @@ def create_connection(**kwargs):
             s3_staging_dir=quote_plus(_get_param("/dbconnect/{database}/s3-staging".format(database=database))))
     else:
         connection_string = "{prefix}://{user}:{password}@{endpoint}:{port}/{database}".format(
-            prefix=_get_db_prefix(database),
+            prefix=prefix,
             user=_get_param("/dbconnect/{database}/user".format(database=database)),
             password=_get_param("/dbconnect/{database}/password".format(database=database)),
             endpoint=_get_param("/dbconnect/{database}/endpoint".format(database=database)),
