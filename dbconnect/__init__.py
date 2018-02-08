@@ -35,8 +35,6 @@ def create_connection(**kwargs):
             port=_get_param("/dbconnect/{database}/port".format(database=database)),
             database=_get_param("/dbconnect/{database}/database".format(database=database)))
 
-    print(connection_string)
-
     return create_engine(connection_string)
 
 
