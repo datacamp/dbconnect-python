@@ -61,5 +61,5 @@ def _get_db_prefix(database):
         return 'postgresql'
     elif db_type == 'awsathena':
         return 'awsathena+jdbc'
-
-
+    elif db_type == 'redshift':
+        return 'redshift+psycopg2'
