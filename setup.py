@@ -6,5 +6,5 @@ setup(
     name='dbconnect',
     version='0.0.1',
     packages=['dbconnect'],
-    install_requires=["psycopg2", "pymysql", "sqlalchemy", "boto3", "awscli", "PyAthenaJDBC", "sqlalchemy-redshift"]
+    install_requires=["psycopg2", "pymysql", "sqlalchemy", "boto3", "awscli", "sqlalchemy-redshift"]
 )
