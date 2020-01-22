@@ -5,7 +5,8 @@ from sqlalchemy import create_engine
 from urllib.parse import quote_plus
 
 SSM = boto3.client('ssm')
-
+STS = boto3.client('sts')
+RED = boto3.client('redshift')
 
 def get_databases():
     """Return the database names that can be connected to."""
@@ -26,6 +27,15 @@ def create_connection(**kwargs):
             port=quote_plus(_get_param("/dbconnect/{database}/port".format(database=database))),
             database=quote_plus("main-app"),
             s3_staging_dir=quote_plus(_get_param("/dbconnect/{database}/s3-staging".format(database=database))))
+    elif "redshift" in prefix:
+        creds = _get_redshift_creds(database)
+        connection_string = "{prefix}://{user}:{password}@{endpoint}:{port}/{database}".format(
+            prefix=prefix,
+            user=quote_plus(creds['DbUser']),
+            password=creds['DbPassword'],
+            endpoint=_get_param("/dbconnect/{database}/endpoint".format(database=database)),
+            port=_get_param("/dbconnect/{database}/port".format(database=database)),
+            database=_get_param("/dbconnect/{database}/database".format(database=database)))
     else:
         connection_string = "{prefix}://{user}:{password}@{endpoint}:{port}/{database}".format(
             prefix=prefix,
@@ -44,6 +54,25 @@ def get_docs(**kwargs):
     print("Opening \"{url}\"".format(url=url))
     webbrowser.open(url)
 
+
+def _get_redshift_creds(database):
+    ident = STS.get_caller_identity()
+    username = ident['UserId'].split(':')[1]
+
+    import datetime
+
+    print(datetime.datetime.now())
+    dbuser = RED.get_cluster_credentials(
+            DbUser=username,
+            ClusterIdentifier=_get_param("/dbconnect/{database}/endpoint".format(database=database)).split('.').pop(0),
+            AutoCreate=True,
+            DbGroups=[
+                'iam',
+                'readonlyusers'
+            ]
+    )
+    print(datetime.datetime.now())
+    return dbuser
 
 def _get_param(endpoint):
     response = SSM.get_parameter(
