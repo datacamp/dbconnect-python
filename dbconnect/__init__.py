@@ -38,15 +38,14 @@ def create_connection(**kwargs):
             s3_staging_dir=quote_plus(get_database_param("s3-staging")),
         )
     else:
-        connection_string = (
-            "{prefix}://{user}:{password}@{endpoint}:{port}/{database}".format(
-                prefix=prefix,
-                user=get_database_param("user"),
-                password=get_database_param("password"),
-                endpoint=get_database_param("endpoint"),
-                port=get_database_param("port"),
-                database=get_database_param("database"),
-            )
+        connection_string = "{prefix}://{user}:{password}@{endpoint}:{port}/{database}".format(
+            prefix=prefix,
+            user=get_database_param("user"),
+            password=get_database_param("password"),
+            # endpoint=get_database_param("endpoint"),
+            endpoint="redshift-prod.datacamp.com",
+            port=get_database_param("port"),
+            database=get_database_param("database"),
         )
 
     if "localhost" in connection_string:
